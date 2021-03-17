@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+
+<!-- prompt title bar hiding.  -->
+<style type="text/css">  
+	.ui-dialog-titlebar {
+		display: none;
+	}
+</style>  
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+
+<style type="text/css">
+.radio-inline+.radio-inline {
+	margin-left: 0px;
+	margin-right: 3px;
+}
+</style>
+
+
+
+
+
+</head>
+
+<body>
+
+	<br /> <br/>
+  
+	<h1 style="text-align: center;margin-top: 5em;" id='loading'>Loading...</h1>
+	  
+
+	<div id="container" class="container" style="display: none;">
+
+		<div id="panel" class="panel panel-primary">
+			  
+			<div style="margin-top:-2em;color: gray;float: right;">  
+				
+				<!--
+				<div class="radio-inline"><label style="font-weight: lighter;"><input name="division" checked type="radio" value="2" onclick="{$('#loading').show();$('#container').hide();changeDiv('2');}">점심</label></div>
+				<div class="radio-inline"><label style="font-weight: lighter;"><input name="division" type="radio" value="3" onclick="{$('#loading').show();$('#container').hide(); changeDiv('3');}">저녁</label></div>
+				<div class="radio-inline"><label style="font-weight: lighter;"><input name="division" type="radio" value="1" onclick="{$('#loading').show();$('#container').hide(); changeDiv('1');}">아침</label></div>
+				<div class="radio-inline"><label style="font-weight: lighter;"><input name="division" type="radio" value="4" onclick="{$('#loading').show();$('#container').hide(); changeDiv('4');}">간식</label></div>
+				-->  
+				<select id="division" name="division" onchange="{$('#loading').show();$('#container').hide(); changeDiv(this.value);}">   
+					<option value="2" selected >Lunch</option>  
+					<option value="3">Dinner</option>
+					<option value="1">Breakfast</option>  
+					<option value="4">Snack</option>
+				</select>   
+			</div>  
+
+			<div class="panel-heading" style="text-align: center;">
+					<span id="whichDivision"></span>
+					<a style='color: white;' 
+					href="#" onclick="javascript:{location.href='?param=validatedUser&pjtName='+tmpSavedPjtName}"> Together</a>&nbsp;<span><sup id="pjtName"></sup></span>    
+
+			</div>            
+  
+			<div class="panel-body">
+				
+				<!--
+				<h6 style='color: gray;text-align:center'>
+					<span class="glyphicon glyphicon-asterisk" /> 공지사항 없음. 
+				</h6> -->
+
+
+				<div style="text-align: center;">
+					<span id="datepicker" style="font-size: 1.5em;"></span>
+				</div>
+
+				<form>
+					<div class="panel panel-default">
+						<!-- Panel Start -->
+						<div class="panel-body">
+							<!-- Panel Body Start -->
+							
+							<div id="restaurants">
+							
+							</div>
+							<div class="radio-inline form-inline">
+								<label> <input name="menu" type="radio" value="ETC" style="float:right;"
+									onclick="enableEtcInput();">Etc </input> <input id="etc"
+									style="width: 100px;" type="text" class="form-control"
+									name="etc" disabled placeholder="Etc" /></label>
+
+							</div>
+
+  
+							<div class="input-group" style="width:240px; margin-top: 1em;">
+								<!-- Button Group  -->
+								<select class="form-control placeholder" id="inputName"
+									onchange="{if(0 != $( '#inputName option:selected' ).text().length){$('#alertMsg').text('')}}">
+									  
+								</select> 
+								<span class="input-group-btn">
+
+									<button style="margin-right: 1em;" id="btnSave" type="button" class="btn btn-primary"
+										onclick="postMenu();">Save</button> 
+									
+										<button title="Shuffle"  onclick="goRandom();" type="button" class="btn btn-link"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+											<path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+											<path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+										  </svg></button>
+										  <button title="Coffee" onclick="goCoffee();" type="button" class="btn btn-link">
+											<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cup-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+												<path fill-rule="evenodd" d="M1 2a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v1h.5A1.5 1.5 0 0 1 16 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-.55a2.5 2.5 0 0 1-2.45 2h-8A2.5 2.5 0 0 1 1 12.5V2zm13 10h.5a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5H14v8z"/>
+											  </svg>
+										  </button> 
+											  
+								</span> 
+
+							</div>
+
+								
+
+							&nbsp;<span id="alertMsg" style="color: red;"></span>
+
+							
+
+						</div>
+						<!-- End of panel body -->
+					</div>
+					<!-- End of panel -->
+				</form>
+
+
+ 
+				<!-- Selected Result (Restaurants) -->
+				<span id="resultSelected"></span>
+
+
+
+				<!-- Show Chart GUI Result -->
+				<div id="chkResultPeriodically" style="text-align: right;">
+					<span id="progressStatus" style="color: red; font-size: 0.7em;"
+						hidden></span>&nbsp; <span id="autoRefresh" title="Auto Refresh(59 sec)"
+						class="glyphicon glyphicon-repeat" style="cursor: pointer;" 
+						onclick="refreshResult();"></span>   
+						<!--<span style="visibility: hidden;" id="stopAutoRefresh" title="Stop"
+						class="glyphicon glyphicon-stop"  
+						onclick="{clearInterval(intervalResult); /*$('#progressStatus').text('Stopped.');$('#progressStatus').show();*/}"   
+						style="cursor: pointer" ></span>-->
+				</div>
+				<div id="chart_div" style="border: 1px solid #ccc;"></div>
+
+
+				<!-- Dev Info -->
+
+				<!-- Tech Stack -->
+				<div id="techstack">
+
+					<!-- Tech Stack Hidden -->
+					<div style="text-align: center; margin-top: 1em;">
+						<span id="btnHide"
+							onclick="$('#techstack').hide();$(this).hide();"
+							class="glyphicon glyphicon-chevron-up" style="cursor: pointer;"></span>
+					</div>
+
+					<hr /> 
+
+					<dl>
+						<dt>Tech Stack</dt>
+						<dd>Azure - Static Web App, Funtion App, DevOps, AKS, ACR </dd>
+						<dd>Web - HTML, JQuery, Bootstrap, Google Chart</dd>
+						<dd>Lang. - Swift, Kotlin, Python, JAVA SpringBoot</dd>
+						<dd>Etc - Postgre (Heroku), GitHub, AWS S3 </dd>  
+  
+					</dl>
+					<dl>
+						<dt>Issue Tracker</dt>
+						<dd>
+							<a href="https://github.com/hyonsok5">GitHub</a>
+						</dd>  
+						
+					</dl>
+
+					<div id="appDown" style="float: right; margin-top: -50px;">
+						<a class="btn btn-default" role="button"
+							href="">Android</a>
+						<a class="btn btn-default" role="button"
+							href="itms-services://?action=download-manifest&url=">iOS</a>
+					</div>
+
+					<dl id="adminPage">
+						<dt>Admin</dt>  
+						<dd>
+							<a href="http://52.231.55.96/">Go ~ </a>
+						</dd>    
+					</dl>
+
+
+					<!--
+					<div style="float: right; margin-top: -50px;">
+						<a class="btn btn-default" role="button"
+							href="https://play.google.com/store/apps/details?id=io.koohoo.lunchTogetherDroid">Android</a>
+						<a class="btn btn-default" role="button"
+							href="itms-services://?action=download-manifest&url=https://s3.ap-northeast-2.amazonaws.com/lunch-together-app/manifest.plist">iOS</a>
+					</div>
+					
+					<img role="button" src="https://lunch2gether-app.s3.ap-northeast-2.amazonaws.com/kibana.png" style="width:30px;" onclick="go2kibana();" style="cursor:pointer" />
+					-->
+
+				</div>
+				<!-- End of Tech Stack -->
+
+
+			</div>
+			<!-- End of Panel Body -->
+
+			<!--  Footer -->
+
+			<div class="panel-footer" style="text-align: center;">
+				@Lunch2 <span
+					class="glyphicon glyphicon-cloud" aria-hidden=true
+					style="vertical-align: middle; color: black; cursor: pointer;"
+					title="Dev Info" onclick="showTechStackOrNot()"></span>
+
+			</div>
+
+		</div>
+
+
+
+	</div>
+
+
+
+</body>
+ 
+ 
+<script src="./obfuscater.js"></script>
+
+  
+
+</html>
